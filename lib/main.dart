@@ -11,7 +11,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import 'data.dart';
 
-const String apiEndpoint = "";
+const String apiEndpoint = "https://obra-allgaeu.de";
 
 void main() {
   runApp(const MyApp());
@@ -165,6 +165,22 @@ class DetailDialog extends StatelessWidget {
                       Html(data: e.desc, extensions: [TableHtmlExtension()]),
                     ],
                   ),
+                  // if (e.comments.isEmpty) Text("Keine Kommentare.") else
+                  for (Comment c in e.comments)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Divider(),
+                        Row(
+                          children: [
+                            Text(c.author, style: TextStyle(fontWeight: FontWeight.bold)),
+                            SizedBox(width: 5),
+                            Text(c.date, style: TextStyle(fontSize: 12)),
+                          ],
+                        ),
+                        Text(c.text),
+                      ],
+                    ),
                 ],
               ),
             ),
