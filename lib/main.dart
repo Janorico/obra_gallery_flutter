@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Obra | Galerie', theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange)), home: const MainPage());
+    return MaterialApp(title: 'Allgäu Showhouse', theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.green)), home: const MainPage());
   }
 }
 
