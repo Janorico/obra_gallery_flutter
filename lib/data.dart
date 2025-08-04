@@ -75,20 +75,20 @@ class Picture {
 
 class Comment {
   String author;
-  String text;
   String date;
+  String text;
 
-  Comment({required this.author, required this.text, required this.date});
+  Comment({required this.author, required this.date, required this.text});
 
   factory Comment.fromJson(Map<String, dynamic> json) {
     return switch (json) {
       {
         'author': String author,
-        'copyright': String copyright,
-        'file_name': String fileName,
+        'date': String date,
+        'text': String text,
       } =>
-        Comment(author: author, text: copyright, date: fileName),
-      _ => throw const FormatException('Failed to parse picture data.'),
+        Comment(author: author, date: date, text: text),
+      _ => throw const FormatException('Failed to parse comment data.'),
     };
   }
 }
