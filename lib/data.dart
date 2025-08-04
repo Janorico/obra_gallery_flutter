@@ -6,14 +6,7 @@ class Entry {
   List<Comment> comments;
   String date;
 
-  Entry({
-    required this.idx,
-    required this.name,
-    required this.desc,
-    required this.pictures,
-    required this.comments,
-    required this.date,
-  });
+  Entry({required this.idx, required this.name, required this.desc, required this.pictures, required this.comments, required this.date});
 
   factory Entry.fromJson(Map<String, dynamic> json) {
     switch (json) {
@@ -34,14 +27,7 @@ class Entry {
           for (Map<String, dynamic> item in comments) {
             c.add(Comment.fromJson(item));
           }
-          return Entry(
-            idx: idx,
-            name: name,
-            desc: desc,
-            pictures: p,
-            comments: c,
-            date: date,
-          );
+          return Entry(idx: idx, name: name, desc: desc, pictures: p, comments: c, date: date);
         }
       case _:
         throw const FormatException('Failed to parse entry data.');
@@ -54,20 +40,11 @@ class Picture {
   String copyright;
   String fileName;
 
-  Picture({
-    required this.hash,
-    required this.copyright,
-    required this.fileName,
-  });
+  Picture({required this.hash, required this.copyright, required this.fileName});
 
   factory Picture.fromJson(Map<String, dynamic> json) {
     return switch (json) {
-      {
-        'hash': String hash,
-        'copyright': String copyright,
-        'file_name': String fileName,
-      } =>
-        Picture(hash: hash, copyright: copyright, fileName: fileName),
+      {'hash': String hash, 'copyright': String copyright, 'file_name': String fileName} => Picture(hash: hash, copyright: copyright, fileName: fileName),
       _ => throw const FormatException('Failed to parse picture data.'),
     };
   }
@@ -82,12 +59,7 @@ class Comment {
 
   factory Comment.fromJson(Map<String, dynamic> json) {
     return switch (json) {
-      {
-        'author': String author,
-        'date': String date,
-        'text': String text,
-      } =>
-        Comment(author: author, date: date, text: text),
+      {'author': String author, 'date': String date, 'text': String text} => Comment(author: author, date: date, text: text),
       _ => throw const FormatException('Failed to parse comment data.'),
     };
   }
