@@ -22,13 +22,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Obra | Galerie',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
-      ),
-      home: const MainPage(),
-    );
+    return MaterialApp(title: 'Obra | Galerie', theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange)), home: const MainPage());
   }
 }
 
@@ -59,10 +53,7 @@ class _MainPageState extends State<MainPage> {
               if (snapshot.hasData) {
                 List<Entry> d = snapshot.data as List<Entry>;
                 return GridView.count(
-                  crossAxisCount: max(
-                    (MediaQuery.sizeOf(context).width / 400).floor(),
-                    1,
-                  ),
+                  crossAxisCount: max((MediaQuery.sizeOf(context).width / 400).floor(), 1),
                   scrollDirection: Axis.vertical,
                   physics: BouncingScrollPhysics(),
                   children: [
@@ -87,14 +78,7 @@ class _MainPageState extends State<MainPage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              AspectRatio(
-                                aspectRatio: 1.17,
-                                child: PicturesView(
-                                  e: e,
-                                  height: 300,
-                                  autoPlay: true,
-                                ),
-                              ),
+                              AspectRatio(aspectRatio: 1.17, child: PicturesView(e: e, height: 300, autoPlay: true)),
                               Text(e.name, textAlign: TextAlign.center),
                             ],
                           ),
@@ -105,22 +89,9 @@ class _MainPageState extends State<MainPage> {
               }
 
               if (snapshot.hasError) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.error),
-                      Text("Fehler: ${snapshot.error}"),
-                    ],
-                  ),
-                );
+                return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.error), Text("Fehler: ${snapshot.error}")]));
               }
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [CircularProgressIndicator(), Text("Laden...")],
-                ),
-              );
+              return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [CircularProgressIndicator(), Text("Laden...")]));
             },
           ),
           Container(
@@ -129,16 +100,9 @@ class _MainPageState extends State<MainPage> {
               data:
                   '<div style="text-align: right">Angetrieben von <a href="https://flutter.dev/"><flutter></flutter> Flutter</a> und den <a href="https://packages">folgenden Paketen</a>.</div>',
               extensions: [
-                TagExtension(
-                  tagsToExtend: {'flutter'},
-                  child: FlutterLogo(size: 12),
-                ),
+                TagExtension(tagsToExtend: {'flutter'}, child: FlutterLogo(size: 12)),
               ],
-              onLinkTap: (
-                String? url,
-                Map<String, String> attributes,
-                element,
-              ) {
+              onLinkTap: (String? url, Map<String, String> attributes, element) {
                 if (url == 'https://packages') {
                   showDialog(
                     context: context,
@@ -182,10 +146,7 @@ class DetailDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: ColorScheme.of(context).surface,
-        borderRadius: BorderRadiusDirectional.circular(10),
-      ),
+      decoration: BoxDecoration(color: ColorScheme.of(context).surface, borderRadius: BorderRadiusDirectional.circular(10)),
       child: Stack(
         children: [
           SingleChildScrollView(
@@ -194,17 +155,8 @@ class DetailDialog extends StatelessWidget {
               child: Column(
                 children: [
                   ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxHeight: min(
-                        MediaQuery.sizeOf(context).width / 1.77,
-                        MediaQuery.sizeOf(context).height / 1.3,
-                      ),
-                    ),
-                    child: PicturesView(
-                      e: e,
-                      height: 800,
-                      shortcutsEnabled: true,
-                    ),
+                    constraints: BoxConstraints(maxHeight: min(MediaQuery.sizeOf(context).width / 1.77, MediaQuery.sizeOf(context).height / 1.3)),
+                    child: PicturesView(e: e, height: 800, shortcutsEnabled: true),
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -230,21 +182,10 @@ class PicturesView extends StatefulWidget {
   final bool autoPlay;
   final bool shortcutsEnabled;
 
-  const PicturesView({
-    super.key,
-    required this.e,
-    required this.height,
-    this.autoPlay = false,
-    this.shortcutsEnabled = false,
-  });
+  const PicturesView({super.key, required this.e, required this.height, this.autoPlay = false, this.shortcutsEnabled = false});
 
   @override
-  State<StatefulWidget> createState() => _PicturesViewState(
-    e: e,
-    height: height,
-    autoPlay: autoPlay,
-    shortcutsEnabled: shortcutsEnabled,
-  );
+  State<StatefulWidget> createState() => _PicturesViewState(e: e, height: height, autoPlay: autoPlay, shortcutsEnabled: shortcutsEnabled);
 }
 
 class _PicturesViewState extends State<PicturesView> {
@@ -252,25 +193,16 @@ class _PicturesViewState extends State<PicturesView> {
   final double height;
   final bool autoPlay;
   final bool shortcutsEnabled;
-  final CarouselSliderController carouselController =
-      CarouselSliderController();
+  final CarouselSliderController carouselController = CarouselSliderController();
   bool autoPlaying = false;
   int activePicture = 0;
 
-  _PicturesViewState({
-    required this.e,
-    required this.height,
-    this.autoPlay = false,
-    this.shortcutsEnabled = false,
-  });
+  _PicturesViewState({required this.e, required this.height, this.autoPlay = false, this.shortcutsEnabled = false});
 
   @override
   Widget build(BuildContext context) {
     if (e.pictures.isEmpty) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [Icon(Icons.warning), Text("Keine Bilder verfügbar.")],
-      );
+      return Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.warning), Text("Keine Bilder verfügbar.")]);
     }
     Stack mainStack = Stack(
       children: [
@@ -311,10 +243,7 @@ class _PicturesViewState extends State<PicturesView> {
           alignment: Alignment.centerLeft,
           child: IconButton(
             onPressed: () {
-              carouselController.previousPage(
-                duration: Duration(milliseconds: 300),
-                curve: Curves.ease,
-              );
+              carouselController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.ease);
             },
             icon: Icon(Icons.chevron_left),
           ),
@@ -323,10 +252,7 @@ class _PicturesViewState extends State<PicturesView> {
           alignment: Alignment.centerRight,
           child: IconButton(
             onPressed: () {
-              carouselController.nextPage(
-                duration: Duration(milliseconds: 300),
-                curve: Curves.ease,
-              );
+              carouselController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.ease);
             },
             icon: Icon(Icons.chevron_right),
           ),
@@ -343,10 +269,7 @@ class _PicturesViewState extends State<PicturesView> {
                   child: Container(
                     width: 5,
                     height: 5,
-                    decoration: BoxDecoration(
-                      color: activePicture == i ? Colors.black : Colors.grey,
-                      borderRadius: BorderRadius.circular(2.5),
-                    ),
+                    decoration: BoxDecoration(color: activePicture == i ? Colors.black : Colors.grey, borderRadius: BorderRadius.circular(2.5)),
                   ),
                 ),
             ],
@@ -357,16 +280,8 @@ class _PicturesViewState extends State<PicturesView> {
     if (shortcutsEnabled) {
       return CallbackShortcuts(
         bindings: {
-          const SingleActivator(LogicalKeyboardKey.arrowLeft):
-              () => carouselController.previousPage(
-                duration: Duration(milliseconds: 300),
-                curve: Curves.ease,
-              ),
-          const SingleActivator(LogicalKeyboardKey.arrowRight):
-              () => carouselController.nextPage(
-                duration: Duration(milliseconds: 300),
-                curve: Curves.ease,
-              ),
+          const SingleActivator(LogicalKeyboardKey.arrowLeft): () => carouselController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.ease),
+          const SingleActivator(LogicalKeyboardKey.arrowRight): () => carouselController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.ease),
         },
         child: Focus(autofocus: true, child: mainStack),
       );
@@ -388,9 +303,7 @@ String getPictureURL(Picture p) {
 }
 
 Future<List<Entry>> fetchData() async {
-  final response = await http.get(
-    Uri.parse('$apiEndpoint/gallery-api-v2/fetch.php'),
-  );
+  final response = await http.get(Uri.parse('$apiEndpoint/gallery-api-v2/fetch.php'));
   if (response.statusCode == 200) {
     List<dynamic> json = jsonDecode(response.body) as List<dynamic>;
     List<Entry> data = [];
