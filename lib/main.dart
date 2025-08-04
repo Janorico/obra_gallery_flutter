@@ -11,7 +11,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import 'data.dart';
 
-const String apiEndpoint = "https://obra-allgaeu.de";
+const String apiEndpoint = "";
 
 void main() {
   runApp(const MyApp());
