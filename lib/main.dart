@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html_table/flutter_html_table.dart';
 import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher_string.dart';
 
 import 'data.dart';
 
@@ -45,93 +44,85 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          FutureBuilder(
-            future: data,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                List<Entry> d = snapshot.data as List<Entry>;
-                return GridView.count(
-                  crossAxisCount: max((MediaQuery.sizeOf(context).width / 400).floor(), 1),
-                  scrollDirection: Axis.vertical,
-                  physics: BouncingScrollPhysics(),
-                  children: [
-                    for (Entry e in d)
-                      InkWell(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            // barrierColor: Color(0xE0000000),
-                            barrierColor: Color(0x00000000),
-                            builder: (BuildContext context) {
-                              return /*BackdropFilter(
+      body: FutureBuilder(
+        future: data,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<Entry> d = snapshot.data as List<Entry>;
+            return GridView.count(
+              crossAxisCount: max((MediaQuery.sizeOf(context).width / 400).floor(), 1),
+              scrollDirection: Axis.vertical,
+              physics: BouncingScrollPhysics(),
+              children: [
+                for (Entry e in d)
+                  InkWell(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        // barrierColor: Color(0xE0000000),
+                        barrierColor: Color(0x00000000),
+                        builder: (BuildContext context) {
+                          return /*BackdropFilter(
                             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                             child: */ DetailDialog(e: e) /*,
                           )*/;
-                            },
-                          );
                         },
-                        borderRadius: BorderRadius.circular(10),
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              AspectRatio(aspectRatio: 1.17, child: PicturesView(e: e, height: 300, autoPlay: true)),
-                              Text(e.name, textAlign: TextAlign.center),
-                            ],
-                          ),
-                        ),
-                      ),
-                  ],
-                );
-              }
-
-              if (snapshot.hasError) {
-                return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.error), Text("Fehler: ${snapshot.error}")]));
-              }
-              return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [CircularProgressIndicator(), Text("Laden...")]));
-            },
-          ),
-          Container(
-            alignment: Alignment.bottomRight,
-            child: Html(
-              data:
-                  '<div style="text-align: right">Angetrieben von <a href="https://flutter.dev/"><flutter></flutter> Flutter</a> und den <a href="https://packages">folgenden Paketen</a>.</div>',
-              extensions: [
-                TagExtension(tagsToExtend: {'flutter'}, child: FlutterLogo(size: 12)),
-              ],
-              onLinkTap: (String? url, Map<String, String> attributes, element) {
-                if (url == 'https://packages') {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Dialog(
-                        child: SizedBox(
-                          width: 200,
-                          height: 200,
-                          child: Center(
-                            child: Html(
-                              data:
-                                  '<div style="text-align: center">'
-                                  '<a href="https://github.com/serenader2014/flutter_carousel_slider">flutter_carousel_slider</a>'
-                                  '<br><a href="https://github.com/Sub6Resources/flutter_html">flutter_html</a>'
-                                  '<br><a href="https://github.com/flutter/packages/tree/main/packages/url_launcher/url_launcher">url_launcher</a>'
-                                  '</div>',
-                            ),
-                          ),
-                        ),
                       );
                     },
-                  );
-                } else if (url != null) {
-                  launchUrlString(url);
-                }
-              },
+                    borderRadius: BorderRadius.circular(10),
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          AspectRatio(aspectRatio: 1.17, child: PicturesView(e: e, height: 300, autoPlay: true)),
+                          Text(e.name, textAlign: TextAlign.center),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          }
+
+          if (snapshot.hasError) {
+            return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.error), Text("Fehler: ${snapshot.error}")]));
+          }
+          return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [CircularProgressIndicator(), Text("Laden...")]));
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        tooltip: "Softwareinformationen",
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        focusElevation: 0,
+        hoverElevation: 0,
+        highlightElevation: 0,
+        disabledElevation: 0,
+        mini: true,
+        onPressed:
+            () => showAboutDialog(
+              context: context,
+              applicationName: "Obra Gallery Flutter",
+              applicationLegalese: """Obra Gallery client implementation using Flutter.
+Copyright (C) 2025-present  Janosch Lion
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+Dynamic content (images, text, etc.) may have separate copyright.""",
             ),
-          ),
-        ],
+        child: const Icon(Icons.info_outline),
       ),
     );
   }
