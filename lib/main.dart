@@ -320,11 +320,11 @@ Widget getPictureImage(Picture? p) {
 }
 
 String getPictureURL(Picture p) {
-  return '$apiEndpoint/gallery-images/${p.fileName}';
+  return '$apiEndpoint/showhouse-images/${p.fileName}';
 }
 
 Future<List<Entry>> fetchData() async {
-  final response = await http.get(Uri.parse('$apiEndpoint/gallery-api-v2/fetch.php'));
+  final response = await http.get(Uri.parse('$apiEndpoint/showhouse-api-v2/fetch.php'));
   if (response.statusCode == 200) {
     List<dynamic> json = jsonDecode(response.body) as List<dynamic>;
     List<Entry> data = [];

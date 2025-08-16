@@ -1,18 +1,37 @@
 class Entry {
   int idx;
   String name;
+  Manufacturer manufacturer;
+  String? productNumber;
+  String price;
+  PriceType priceType;
   String desc;
   List<Picture> pictures;
   List<Comment> comments;
   String date;
 
-  Entry({required this.idx, required this.name, required this.desc, required this.pictures, required this.comments, required this.date});
+  Entry({
+    required this.idx,
+    required this.name,
+    required this.manufacturer,
+    required this.productNumber,
+    required this.price,
+    required this.priceType,
+    required this.desc,
+    required this.pictures,
+    required this.comments,
+    required this.date,
+  });
 
   factory Entry.fromJson(Map<String, dynamic> json) {
     switch (json) {
       case {
         'idx': int idx,
         'name': String name,
+        'manufacturer': String manufacturer,
+        'product_number': String? productNumber,
+        'price': String price,
+        'price_type': String priceType,
         'desc': String desc,
         'pictures': List<dynamic> pictures,
         'comments': List<dynamic> comments,
@@ -27,11 +46,53 @@ class Entry {
           for (Map<String, dynamic> item in comments) {
             c.add(Comment.fromJson(item));
           }
-          return Entry(idx: idx, name: name, desc: desc, pictures: p, comments: c, date: date);
+          return Entry(
+            idx: idx,
+            name: name,
+            manufacturer: Manufacturer.fromString(manufacturer),
+            productNumber: productNumber,
+            price: price,
+            priceType: PriceType.fromString(priceType),
+            desc: desc,
+            pictures: p,
+            comments: c,
+            date: date,
+          );
         }
       case _:
         throw const FormatException('Failed to parse entry data.');
     }
+  }
+}
+
+enum Manufacturer {
+  obra('Obra'),
+  lindl('HolzKunst Lindl'),
+  holzAuthentisch('Holz Authentisch');
+
+  final String displayName;
+
+  const Manufacturer(this.displayName);
+
+  factory Manufacturer.fromString(String str) {
+    for (Manufacturer m in Manufacturer.values) {
+      if (m.name == str) return m;
+    }
+    throw FormatException("No matching manufacturer found for '$str'.");
+  }
+}
+
+enum PriceType {
+  buyable,
+  similar,
+  bought,
+  unbuyable;
+
+  factory PriceType.fromString(String str) {
+    for (PriceType pt in PriceType.values) {
+      if (pt.name == str) return pt;
+    }
+    throw FormatException("No matching price type found for '$str'.");
   }
 }
 
