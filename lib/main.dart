@@ -8,7 +8,6 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html_table/flutter_html_table.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher_string.dart';
 
 import 'data.dart';
 
@@ -115,44 +114,40 @@ class _MainPageState extends State<MainPage> {
               ),
             ),
           ),
-          Container(
-            alignment: Alignment.bottomRight,
-            child: Html(
-              data:
-                  '<div style="text-align: right">Angetrieben von <a href="https://flutter.dev/"><flutter></flutter> Flutter</a> und den <a href="https://packages">folgenden Paketen</a>.</div>',
-              extensions: [
-                TagExtension(tagsToExtend: {'flutter'}, child: FlutterLogo(size: 12)),
-              ],
-              onLinkTap: (String? url, Map<String, String> attributes, element) {
-                if (url == 'https://packages') {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Dialog(
-                        child: SizedBox(
-                          width: 200,
-                          height: 200,
-                          child: Center(
-                            child: Html(
-                              data:
-                                  '<div style="text-align: center">'
-                                  '<a href="https://github.com/serenader2014/flutter_carousel_slider">flutter_carousel_slider</a>'
-                                  '<br><a href="https://github.com/Sub6Resources/flutter_html">flutter_html</a>'
-                                  '<br><a href="https://github.com/flutter/packages/tree/main/packages/url_launcher/url_launcher">url_launcher</a>'
-                                  '</div>',
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                } else if (url != null) {
-                  launchUrlString(url);
-                }
-              },
-            ),
-          ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        tooltip: "Softwareinformationen",
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        focusElevation: 0,
+        hoverElevation: 0,
+        highlightElevation: 0,
+        disabledElevation: 0,
+        mini: true,
+        onPressed:
+            () => showAboutDialog(
+              context: context,
+              applicationName: "Obra Gallery Flutter",
+              applicationLegalese: """Obra Gallery client implementation using Flutter.
+Copyright (C) 2025-present  Janosch Lion
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+Dynamic content (images, text, etc.) may have separate copyright.""",
+            ),
+        child: const Icon(Icons.info_outline),
       ),
     );
   }
@@ -228,48 +223,42 @@ class PicturesView extends StatefulWidget {
   const PicturesView({super.key, required this.e, required this.height, this.autoPlay = false, this.shortcutsEnabled = false});
 
   @override
-  State<StatefulWidget> createState() => _PicturesViewState(e: e, height: height, autoPlay: autoPlay, shortcutsEnabled: shortcutsEnabled);
+  State<StatefulWidget> createState() => _PicturesViewState();
 }
 
 class _PicturesViewState extends State<PicturesView> {
-  final Entry e;
-  final double height;
-  final bool autoPlay;
-  final bool shortcutsEnabled;
   final CarouselSliderController carouselController = CarouselSliderController();
   bool autoPlaying = false;
   int activePicture = 0;
 
-  _PicturesViewState({required this.e, required this.height, this.autoPlay = false, this.shortcutsEnabled = false});
-
   @override
   Widget build(BuildContext context) {
-    if (e.pictures.isEmpty) {
+    if (widget.e.pictures.isEmpty) {
       return Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.warning), Text("Keine Bilder verfügbar.")]);
     }
     Stack mainStack = Stack(
       children: [
         MouseRegion(
           onEnter: (PointerEvent event) {
-            if (autoPlay) {
+            if (widget.autoPlay) {
               setState(() {
                 autoPlaying = true;
               });
             }
           },
           onExit: (PointerEvent event) {
-            if (autoPlay) {
+            if (widget.autoPlay) {
               setState(() {
                 autoPlaying = false;
               });
             }
           },
           child: CarouselSlider.builder(
-            itemCount: e.pictures.length,
+            itemCount: widget.e.pictures.length,
             options: CarouselOptions(
               viewportFraction: 1.0,
-              height: height,
-              autoPlay: autoPlay && autoPlaying,
+              height: widget.height,
+              autoPlay: widget.autoPlay && autoPlaying,
               autoPlayInterval: Duration(seconds: 2, milliseconds: 500),
               onPageChanged:
                   (index, reason) => setState(() {
@@ -278,7 +267,7 @@ class _PicturesViewState extends State<PicturesView> {
             ),
             carouselController: carouselController,
             itemBuilder: (context, int index, int reaLIndex) {
-              return getPictureImage(e.pictures[index]);
+              return getPictureImage(widget.e.pictures[index]);
             },
           ),
         ),
@@ -306,7 +295,7 @@ class _PicturesViewState extends State<PicturesView> {
             mainAxisAlignment: MainAxisAlignment.center,
             spacing: 5,
             children: [
-              for (int i = 0; i < e.pictures.length; i++)
+              for (int i = 0; i < widget.e.pictures.length; i++)
                 GestureDetector(
                   onTap: () => carouselController.animateToPage(i),
                   child: Container(
@@ -320,7 +309,7 @@ class _PicturesViewState extends State<PicturesView> {
         ),
       ],
     );
-    if (shortcutsEnabled) {
+    if (widget.shortcutsEnabled) {
       return CallbackShortcuts(
         bindings: {
           const SingleActivator(LogicalKeyboardKey.arrowLeft): () => carouselController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.ease),
