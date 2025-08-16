@@ -47,6 +47,11 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       body: Stack(
         children: [
+          SizedBox(
+            width: double.infinity,
+            height: double.infinity,
+            child: Image.asset("images/bg1.jpg", fit: BoxFit.cover, opacity: AlwaysStoppedAnimation(0.4)),
+          ),
           FutureBuilder(
             future: data,
             builder: (context, snapshot) {
