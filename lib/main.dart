@@ -192,48 +192,42 @@ class PicturesView extends StatefulWidget {
   const PicturesView({super.key, required this.e, required this.height, this.autoPlay = false, this.shortcutsEnabled = false});
 
   @override
-  State<StatefulWidget> createState() => _PicturesViewState(e: e, height: height, autoPlay: autoPlay, shortcutsEnabled: shortcutsEnabled);
+  State<StatefulWidget> createState() => _PicturesViewState();
 }
 
 class _PicturesViewState extends State<PicturesView> {
-  final Entry e;
-  final double height;
-  final bool autoPlay;
-  final bool shortcutsEnabled;
   final CarouselSliderController carouselController = CarouselSliderController();
   bool autoPlaying = false;
   int activePicture = 0;
 
-  _PicturesViewState({required this.e, required this.height, this.autoPlay = false, this.shortcutsEnabled = false});
-
   @override
   Widget build(BuildContext context) {
-    if (e.pictures.isEmpty) {
+    if (widget.e.pictures.isEmpty) {
       return Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.warning), Text("Keine Bilder verfügbar.")]);
     }
     Stack mainStack = Stack(
       children: [
         MouseRegion(
           onEnter: (PointerEvent event) {
-            if (autoPlay) {
+            if (widget.autoPlay) {
               setState(() {
                 autoPlaying = true;
               });
             }
           },
           onExit: (PointerEvent event) {
-            if (autoPlay) {
+            if (widget.autoPlay) {
               setState(() {
                 autoPlaying = false;
               });
             }
           },
           child: CarouselSlider.builder(
-            itemCount: e.pictures.length,
+            itemCount: widget.e.pictures.length,
             options: CarouselOptions(
               viewportFraction: 1.0,
-              height: height,
-              autoPlay: autoPlay && autoPlaying,
+              height: widget.height,
+              autoPlay: widget.autoPlay && autoPlaying,
               autoPlayInterval: Duration(seconds: 2, milliseconds: 500),
               onPageChanged:
                   (index, reason) => setState(() {
@@ -242,7 +236,7 @@ class _PicturesViewState extends State<PicturesView> {
             ),
             carouselController: carouselController,
             itemBuilder: (context, int index, int reaLIndex) {
-              return getPictureImage(e.pictures[index]);
+              return getPictureImage(widget.e.pictures[index]);
             },
           ),
         ),
@@ -270,7 +264,7 @@ class _PicturesViewState extends State<PicturesView> {
             mainAxisAlignment: MainAxisAlignment.center,
             spacing: 5,
             children: [
-              for (int i = 0; i < e.pictures.length; i++)
+              for (int i = 0; i < widget.e.pictures.length; i++)
                 GestureDetector(
                   onTap: () => carouselController.animateToPage(i),
                   child: Container(
@@ -284,7 +278,7 @@ class _PicturesViewState extends State<PicturesView> {
         ),
       ],
     );
-    if (shortcutsEnabled) {
+    if (widget.shortcutsEnabled) {
       return CallbackShortcuts(
         bindings: {
           const SingleActivator(LogicalKeyboardKey.arrowLeft): () => carouselController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.ease),
