@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html_table/flutter_html_table.dart';
+import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -35,6 +36,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   late Future<List<Entry>> data;
+  String search = "";
 
   @override
   void initState() {
@@ -56,7 +58,7 @@ class _MainPageState extends State<MainPage> {
             future: data,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                List<Entry> d = snapshot.data as List<Entry>;
+                Iterable<Entry> d = search.isEmpty ? snapshot.data! : filterEntries(snapshot.data!);
                 return GridView.count(
                   crossAxisCount: max((MediaQuery.sizeOf(context).width / 400).floor(), 1),
                   scrollDirection: Axis.vertical,
@@ -100,6 +102,20 @@ class _MainPageState extends State<MainPage> {
             },
           ),
           Container(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsetsGeometry.all(10.0),
+              child: TextField(
+                decoration: InputDecoration(label: Text("Suchen...")),
+                onChanged: (value) {
+                  setState(() {
+                    search = value;
+                  });
+                },
+              ),
+            ),
+          ),
+          Container(
             alignment: Alignment.bottomRight,
             child: Html(
               data:
@@ -139,6 +155,12 @@ class _MainPageState extends State<MainPage> {
         ],
       ),
     );
+  }
+
+  Iterable<Entry> filterEntries(List<Entry> entries) {
+    return (entries.map((e) => MapEntry(partialRatio(e.name.toLowerCase(), search.toLowerCase()), e)).where((e) => e.key > 75).toList()
+          ..sort((a, b) => b.key.compareTo(a.key)))
+        .map((e) => e.value);
   }
 }
 

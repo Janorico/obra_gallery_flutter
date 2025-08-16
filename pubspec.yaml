@@ -39,6 +39,7 @@ dependencies:
   flutter_html: ^3.0.0
   flutter_html_table: ^3.0.0
   url_launcher: ^6.3.1
+  fuzzywuzzy: ^1.2.0
 
 dev_dependencies:
   flutter_test:
